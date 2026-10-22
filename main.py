@@ -1,13 +1,15 @@
-#Kitne customers company chhod chuke hain, aur kitne abhi company ke saath hain?
-
+import joblib
 import pandas as pd
 
 df = pd.read_csv("WA_Fn-UseC_-Telco-Customer-Churn.csv")
 
-# Check TotalCharges data type
+
+# Convert TotalCharges to numeric and handle missing values
 df["TotalCharges"] = pd.to_numeric(
     df["TotalCharges"], errors="coerce"
 )
+
+df["TotalCharges"] = df["TotalCharges"].fillna(0)
 
 print("Dataset information:")
 print(df.info())
@@ -22,8 +24,7 @@ print("\nCustomer Churn Percentage:")
 print(
     (df["Churn"].value_counts(normalize=True) * 100).round(2)
 )
-#
-#Missing values investigate karo
+
 print("\nRows with missing TotalCharges:")
 
 print(
@@ -35,10 +36,7 @@ print(
 
 print("\nTenure summary:")
 print(df["tenure"].describe())
-#
-df["TotalCharges"] = df["TotalCharges"].fillna(0)           #Isse missing values handle ho jayengi aur saare 7,043 customer records preserve rahenge.
 
-#Kya month-to-month contract wale customers zyada churn karte hain?
 print("\nChurn by Contract Type:")
 
 churn_by_contract = pd.crosstab(
@@ -63,13 +61,13 @@ churn_by_contract["Yes"].plot(
 plt.tight_layout()
 plt.show()
 
-#Pehla Machine Learning model train karo
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
+from sklearn.base import clone
 from sklearn.metrics import accuracy_score, classification_report
 
 # Features and target
@@ -97,7 +95,10 @@ preprocessor = ColumnTransformer(
 # Create model pipeline
 model = Pipeline([
     ("preprocessor", preprocessor),
-    ("classifier", LogisticRegression(max_iter=1000))
+    ("classifier", LogisticRegression(
+    max_iter=1000,
+    class_weight="balanced"
+))
 ])
 
 # Split data into training and testing sets
@@ -105,8 +106,41 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 
-# Train the model
+# Compare the original and balanced models
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score
+)
+
+models = {
+    "Original Logistic Regression": LogisticRegression(max_iter=1000),
+    "Balanced Logistic Regression": LogisticRegression(
+        max_iter=1000,
+        class_weight="balanced"
+    )
+}
+
+for name, classifier in models.items():
+    comparison_model = Pipeline([
+        ("preprocessor", clone(preprocessor)),
+        ("classifier", classifier)
+    ])
+
+    comparison_model.fit(X_train, y_train)
+    predictions = comparison_model.predict(X_test)
+
+    print(f"\n{name}")
+    print("Accuracy:", round(accuracy_score(y_test, predictions), 3))
+    print("Churn Precision:", round(precision_score(y_test, predictions), 3))
+    print("Churn Recall:", round(recall_score(y_test, predictions), 3))
+    print("Churn F1-score:", round(f1_score(y_test, predictions), 3))
+
+# Keep the balanced model as the saved model
 model.fit(X_train, y_train)
+joblib.dump(model, "churn_model.pkl")
+print("\nBalanced model saved successfully!")
 
 # Make predictions
 y_pred = model.predict(X_test)
@@ -115,8 +149,7 @@ y_pred = model.predict(X_test)
 print("\nModel Accuracy:", round(accuracy_score(y_test, y_pred) * 100, 2), "%")
 print("\nClassification Report:")
 print(classification_report(y_test, y_pred, target_names=["No Churn", "Churn"]))
-#
-#Pehle hum model ka Confusion Matrix banayenge. Isse pata chalega ki model ne kitne customers ko correctly aur incorrectly predict kiya.
+
 from sklearn.metrics import ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
@@ -129,9 +162,4 @@ ConfusionMatrixDisplay.from_predictions(
 plt.title("Customer Churn - Confusion Matrix")
 plt.tight_layout()
 plt.show()
-#
-import joblib
 
-joblib.dump(model, "churn_model.pkl")
-
-print("Model saved successfully!")
