@@ -4,6 +4,7 @@
 This project uses Machine Learning to predict whether a telecom customer is likely to leave the service (churn).
 
 ## Dataset
+- Source: [Telco Customer Churn Dataset on Kaggle](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
 - Dataset: Telco Customer Churn
 - Records: 7,043 customers
 - Target column: Churn
