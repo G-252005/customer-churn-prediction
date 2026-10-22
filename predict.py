@@ -1,45 +1,52 @@
-#Customer ka churn predict karo#
-
 import joblib
 import pandas as pd
 
-# Load the trained model
 model = joblib.load("churn_model.pkl")
 
-# Sample customer details
+print("=== Customer Churn Prediction ===")
+
+tenure = int(input("Customer tenure (months): "))
+monthly_charges = float(input("Monthly charges: "))
+total_charges = float(input("Total charges: "))
+
+contract = input(
+    "Contract (Month-to-month, One year, Two year): "
+)
+
+internet_service = input(
+    "Internet service (DSL, Fiber optic, No): "
+)
+
+payment_method = input(
+    "Payment method (Electronic check, Mailed check, Bank transfer (automatic), Credit card (automatic)): "
+)
+
 customer = {
     "gender": "Female",
     "SeniorCitizen": 0,
     "Partner": "Yes",
     "Dependents": "No",
-    "tenure": 2,
+    "tenure": tenure,
     "PhoneService": "Yes",
     "MultipleLines": "No",
-    "InternetService": "DSL",
+    "InternetService": internet_service,
     "OnlineSecurity": "No",
     "OnlineBackup": "Yes",
     "DeviceProtection": "No",
     "TechSupport": "No",
     "StreamingTV": "No",
     "StreamingMovies": "No",
-    "Contract": "Month-to-month",
+    "Contract": contract,
     "PaperlessBilling": "Yes",
-    "PaymentMethod": "Electronic check",
-    "MonthlyCharges": 53.85,
-    "TotalCharges": 108.15
+    "PaymentMethod": payment_method,
+    "MonthlyCharges": monthly_charges,
+    "TotalCharges": total_charges
 }
 
-# Convert customer details into a DataFrame
 customer_df = pd.DataFrame([customer])
 
-# Predict churn
 prediction = model.predict(customer_df)[0]
 probability = model.predict_proba(customer_df)[0][1]
 
-if prediction == 1:
-    print("Prediction: Customer may churn.")
-else:
-    print("Prediction: Customer is likely to stay.")
-
+print("\nPrediction:", "May Churn" if prediction == 1 else "Likely to Stay")
 print(f"Estimated churn probability: {probability:.2%}")
-#
