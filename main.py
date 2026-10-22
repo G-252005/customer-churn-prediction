@@ -1,22 +1,33 @@
+
 import joblib
 import pandas as pd
 
 df = pd.read_csv("WA_Fn-UseC_-Telco-Customer-Churn.csv")
 
-
-# Convert TotalCharges to numeric and handle missing values
+# Convert TotalCharges to numeric
 df["TotalCharges"] = pd.to_numeric(
     df["TotalCharges"], errors="coerce"
 )
 
+# Investigate missing values BEFORE cleaning
+print("\nRows with missing TotalCharges:")
+print(
+    df.loc[
+        df["TotalCharges"].isna(),
+        ["customerID", "tenure", "MonthlyCharges", "TotalCharges", "Churn"]
+    ]
+)
+
+# Handle missing values
 df["TotalCharges"] = df["TotalCharges"].fillna(0)
 
-print("Dataset information:")
+print("\nDataset information:")
 print(df.info())
 
 print("\nMissing values after cleaning:")
 print(df.isnull().sum())
 
+# How many customers left and stayed?
 print("\nCustomer Churn Count:")
 print(df["Churn"].value_counts())
 
@@ -25,20 +36,10 @@ print(
     (df["Churn"].value_counts(normalize=True) * 100).round(2)
 )
 
-print("\nRows with missing TotalCharges:")
-
-print(
-    df.loc[
-        df["TotalCharges"].isna(),
-        ["customerID", "tenure", "MonthlyCharges", "TotalCharges", "Churn"]
-    ]
-)
-
 print("\nTenure summary:")
 print(df["tenure"].describe())
 
 print("\nChurn by Contract Type:")
-
 churn_by_contract = pd.crosstab(
     df["Contract"],
     df["Churn"],
@@ -46,7 +47,6 @@ churn_by_contract = pd.crosstab(
 ) * 100
 
 print(churn_by_contract.round(2))
-#
 
 import matplotlib.pyplot as plt
 
