@@ -28,10 +28,15 @@ This project uses Machine Learning to predict whether a telecom customer is like
 9. Saved the trained model as `churn_model.pkl`.
 
 ## Model Results
-- Test accuracy: approximately 80.55%
-- Churn precision: 0.66
-- Churn recall: 0.56
-- Churn F1-score: 0.60
+
+The Logistic Regression model was evaluated on a held-out test dataset.
+
+- Accuracy: 73.81%
+- Churn precision: 0.50
+- Churn recall: 0.78
+- Churn F1-score: 0.61
+
+Class weighting improved churn recall compared with the initial model, while overall accuracy decreased. The preferred model depends on the business cost of missed churn predictions versus unnecessary retention actions.
 
 ## Key Finding
 In this dataset, month-to-month contract customers had a higher churn rate (42.71%) than one-year contract customers (11.27%) and two-year contract customers (2.83%).
