@@ -1,73 +1,108 @@
-# Customer Churn Prediction
+
+# Customer Churn Prediction & Retention Analytics
 
 ## Project Overview
-This project uses Machine Learning to predict whether a telecom customer is likely to leave the service (churn).
+This project analyzes customer churn data and uses Machine Learning to predict whether a telecom customer may leave the company.
+
+The goal is to identify customer churn patterns and help businesses understand which customers may need retention support.
+
+## Business Questions
+- How many customers have left the company?
+- What percentage of customers are still with the company?
+- Which contract type has the highest churn rate?
+- Can Machine Learning help identify customers at risk of leaving?
 
 ## Dataset
-- Source: [Telco Customer Churn Dataset on Kaggle](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
-- Dataset: Telco Customer Churn
-- Records: 7,043 customers
-- Target column: Churn
+- **Source:** [Telco Customer Churn Dataset - Kaggle](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
+- **Records:** 7,043 customers
+- **Features:** 21 columns, including customer tenure, contract type, payment method, and charges.
+- **Target:** Churn (Yes/No)
 
 ## Technologies Used
 - Python
 - Pandas and NumPy
 - Matplotlib
 - Scikit-learn
-- Logistic Regression
+- Joblib
 
-## Project Steps
-1. Loaded and explored the dataset.
-2. Converted TotalCharges into numeric format.
-3. Handled missing values.
-4. Analysed churn rates by contract type.
-5. Visualized churn rates using a bar chart.
-6. Prepared categorical and numerical features.
-7. Trained a Logistic Regression model.
-8. Evaluated the model using accuracy, precision, recall, F1-score and a confusion matrix.
-9. Saved the trained model as `churn_model.pkl`.
+## Project Workflow
+1. Loaded and explored the customer dataset.
+2. Converted `TotalCharges` to numeric values.
+3. Handled missing `TotalCharges` values.
+4. Analyzed churn counts, percentages, and contract-wise churn rates.
+5. Preprocessed numerical and categorical features.
+6. Trained and compared two Logistic Regression models.
+7. Evaluated model performance using accuracy, precision, recall, and F1-score.
+8. Saved the balanced model and created an interactive command-line prediction script.
 
-## Model Results
+## Key Findings
+- 1,869 customers churned (26.54%).
+- 5,174 customers stayed (73.46%).
+- Month-to-month contracts had the highest churn rate at 42.71%.
+- Two-year contracts had the lowest churn rate at 2.83%.
 
-The Logistic Regression model was evaluated on a held-out test dataset.
+## Model Comparison
 
-- Accuracy: 73.81%
-- Churn precision: 0.50
-- Churn recall: 0.78
-- Churn F1-score: 0.61
+| Metric | Original Model | Balanced Model |
+|---|---:|---:|
+| Accuracy | 80.6% | 73.8% |
+| Churn Precision | 65.7% | 50.4% |
+| Churn Recall | 55.9% | 78.3% |
+| Churn F1-score | 60.4% | 61.4% |
 
-Class weighting improved churn recall compared with the initial model, while overall accuracy decreased. The preferred model depends on the business cost of missed churn predictions versus unnecessary retention actions.
+The balanced model achieved higher churn recall, helping it identify more customers who actually churned. However, it also produces more false-positive predictions.
 
-## Key Finding
-In this dataset, month-to-month contract customers had a higher churn rate (42.71%) than one-year contract customers (11.27%) and two-year contract customers (2.83%).
+## Sample Prediction
+Example output for one sample customer:
 
-## Future Improvements
-- Improve churn recall.
-- Compare multiple machine learning models.
-- Build an interactive dashboard.
-- Develop a simple interface for predictions.
+- **Prediction:** May Churn
+- **Estimated churn probability:** 68.47%
+
+This is a model estimate, not a guarantee. Some customer features in the current prediction script use fixed example values.
+
+## Project Files
+- `main.py` — data analysis, model training, and evaluation.
+- `predict.py` — command-line customer churn prediction.
+- `requirements.txt` — Python package dependencies.
+- `churn_model.pkl` — saved trained model generated locally.
+- `README.md` — project documentation.
+
 ## How to Run
 
-### 1. Install dependencies
+1. Download or clone this repository.
+2. Download the dataset from Kaggle and place the CSV file in the project folder.
+3. Install the required packages:
 
-```bash
-pip install -r requirements.txt
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 2. Run the training script
+4. Train the model and run the analysis:
 
-```bash
-python main.py
-```
+   ```bash
+   python main.py
+   ```
 
-This trains the model, evaluates its performance, displays visualizations, and saves `churn_model.pkl`.
+5. Run a sample prediction:
 
-### 3. Run a sample prediction
+   ```bash
+   python predict.py
+   ```
 
-After generating `churn_model.pkl`, run:
+Run `main.py` first to generate `churn_model.pkl`, which is required by `predict.py`.
 
-```bash
-python predict.py
-```
+## Limitations
+- The model is a learning project and has not been validated in a real business environment.
+- The prediction script currently asks for only some customer features; other features use fixed example values.
+- Model performance depends on the dataset and the selected classification threshold.
 
-**Note:** The dataset file `WA_Fn-UseC_-Telco-Customer-Churn.csv` must be present in the project folder before running `main.py`. The trained model file must be present before running `predict.py`.
+## Future Improvements
+- Build a Power BI dashboard for churn analysis.
+- Improve the prediction interface so users can enter all relevant customer details.
+- Test additional Machine Learning algorithms.
+- Improve model evaluation and document business recommendations.
+
+## Author
+**Gauri Dinesh Hushangabadkar**
+
+Aspiring Data Science and Machine Learning professional.
