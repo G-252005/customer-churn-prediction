@@ -41,3 +41,28 @@ In this dataset, month-to-month contract customers had a higher churn rate (42.7
 - Compare multiple machine learning models.
 - Build an interactive dashboard.
 - Develop a simple interface for predictions.
+## How to Run
+
+### 1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Run the training script
+
+```bash
+python main.py
+```
+
+This trains the model, evaluates its performance, displays visualizations, and saves `churn_model.pkl`.
+
+### 3. Run a sample prediction
+
+After generating `churn_model.pkl`, run:
+
+```bash
+python predict.py
+```
+
+**Note:** The dataset file `WA_Fn-UseC_-Telco-Customer-Churn.csv` must be present in the project folder before running `main.py`. The trained model file must be present before running `predict.py`.
