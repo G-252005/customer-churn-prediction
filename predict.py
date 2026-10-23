@@ -48,5 +48,20 @@ customer_df = pd.DataFrame([customer])
 prediction = model.predict(customer_df)[0]
 probability = model.predict_proba(customer_df)[0][1]
 
+result = customer.copy()
+
+result["Predicted_Churn"] = (
+    "Yes" if prediction == 1 else "No"
+)
+result["Churn_Probability"] = round(probability * 100, 2)
+
+results_df = pd.DataFrame([result])
+
+results_df.to_csv(
+    "churn_predictions.csv",
+    index=False
+)
+
 print("\nPrediction:", "May Churn" if prediction == 1 else "Likely to Stay")
 print(f"Estimated churn probability: {probability:.2%}")
+print("Prediction saved to churn_predictions.csv")
