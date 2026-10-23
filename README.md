@@ -24,7 +24,7 @@ The goal is to identify customer churn patterns and help businesses understand w
 - Matplotlib
 - Scikit-learn
 - Joblib
-- - Power BI
+- Power BI
 - Power Query
 - DAX (Data Analysis Expressions)
 
