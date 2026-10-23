@@ -1,0 +1,2 @@
+gender,SeniorCitizen,Partner,Dependents,tenure,PhoneService,MultipleLines,InternetService,OnlineSecurity,OnlineBackup,DeviceProtection,TechSupport,StreamingTV,StreamingMovies,Contract,PaperlessBilling,PaymentMethod,MonthlyCharges,TotalCharges,Predicted_Churn,Churn_Probability
+Female,0,Yes,No,2,Yes,No,DSL,No,Yes,No,No,No,No,Month-to-month,Yes,Electronic check,53.85,108.15,Yes,68.47
